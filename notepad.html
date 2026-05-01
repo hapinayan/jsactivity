@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>My Secret Notes</h2>
+    <textarea id="noteInput" rows="5" cols="30" placeholder="Type your secrets here...">
+</textarea>
+    <br>
+    <button id="saveBtn">Save Note</button>
+    <button id="clearBtn">Delete Saved Note</button>
+    <p id="statusMessage"></p>
+    <script>
+        const noteBox = document.getElementById('noteInput');
+        const saveBtn = document.getElementById('saveBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const statusMsg = document.getElementById('statusMessage');
+        // --- 1. CHECK FOR SAVED DATA ON LOAD --
+        // Look inside localStorage for a key called 'mySecretNote'
+        const savedNote = localStorage.getItem('mySecretNote');
+        
+        // If data exists, put it back inside the textarea!
+        if (savedNote) {
+            noteBox.value = savedNote;
+            statusMsg.textContent = "Loaded previous note.";
+        }
+        // --- 2. SAVE DATA EVENT --
+        saveBtn.addEventListener('click', () => {
+            // Get the text from the box
+            const textToSave = noteBox.value;
+            
+            // Save it to localStorage
+            localStorage.setItem('mySecretNote', textToSave);
+            statusMsg.textContent = "Note saved to browser!";
+        });
+        // --- 3. CLEAR DATA EVENT --
+        clearBtn.addEventListener('click', () => {
+            // Remove the specific key from localStorage
+            localStorage.removeItem('mySecretNote');
+            
+            // Clear the text box on the screen
+            noteBox.value = "";
+            statusMsg.textContent = "Note permanently deleted.";
+        });
+    </script>
+</body>
+</html>

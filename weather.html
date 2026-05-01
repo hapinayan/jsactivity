@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<style>
+    body { font-family: Arial; display: flex; justify-content: center; margin-top: 50px; 
+background: #87CEEB;}
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px 
+rgba(0,0,0,0.2); text-align: center; width: 300px;}
+    input { padding: 8px; width: 60%; }
+    button { padding: 8px; background: #333; color: white; border: none; cursor: pointer; }
+</style>
+<body>
+    <div class="card">
+        <h2>Live Weather</h2>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button id="searchBtn">Search</button>
+        <div id="weatherDisplay">
+            <h1 id="cityName">--</h1>
+            <h2 id="temperature">-- °C</h2>
+            <p id="description">--</p>
+        </div>
+    </div>
+    <script>
+
+        const apiKey = "openweathermap.org";
+        const searchBtn = document.getElementById('searchBtn');
+        const cityInput = document.getElementById('cityInput');
+
+        async function fetchWeather(city) {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+                const response = await fetch(url);
+                if (!response.ok) {
+                    alert("City not found!");
+                    return;
+                }
+                const data = await response.json();
+
+                document.getElementById('cityName').textContent = data.name;
+                document.getElementById('temperature').textContent = Math.round(data.main.temp) + " °C";
+                document.getElementById('description').textContent = data.weather[0].description.toUpperCase();
+
+                localStorage.setItem('lastSearchedCity', city);
+            }
+            catch (error) {
+                console.log("Something went wrong:", error);
+            }
+        }
+
+        searchBtn.addEventListener('click', () => {
+            const requestedCity = cityInput.value;
+            if(requestedCity !== "") {
+                fetchWeather(requestedCity);
+            }
+        });
+        
+        const savedCity = localStorage.getItem('lastSearchedCity');
+
+        if(savedCity) {
+            fetchWeather(savedCity);
+        }
+        
+    </script>
+</body>
+</html>
